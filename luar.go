@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/yuin/gopher-lua"
+	lua "github.com/yuin/gopher-lua"
 )
 
 // New creates and returns a new lua.LValue for the given value. Values are
@@ -481,4 +481,12 @@ func lValueToReflectInner(L *lua.LState, v lua.LValue, hint reflect.Type, visite
 	}
 
 	panic("never reaches")
+}
+
+// PreloadModule preloads a module.
+func PreloadModule(L *lua.LState, name string, value interface{}) {
+	L.PreloadModule(name, func(L *lua.LState) int {
+		L.Push(New(L, value))
+		return 1
+	})
 }
